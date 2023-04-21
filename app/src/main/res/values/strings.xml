@@ -1,6 +1,5 @@
 <resources>
     <string name="base_url">https://api.yelp.com/v3/</string>
-    <string name="search_endpoint">businesses/search</string>
-    <string name="api_key">RX7esqmi13UEnxvrTCjl98Z-i7tfl7m2_mycL8iovdWHatdPTUbi31DfsMHBM7iDZ2MiiHq4nb2eLc1e9k9rBP0vPB4GTyDdWtOnwwD4qWybeiWDvyQ5i9xHJq5BZHYx</string>
+    <string name="api_key">_45em3yx8PMHlBvUty-dl0HXu7Zigfmgy3Sle2AfLgyySJ4-ppNY_1d8o7MU-G8CmRMgyLzOXURiLCadUoQGF2bT0ESrGTlIGkjdmS6aok1wbZSzDpAhD2uC2otCZHYx</string>
     <string name="app_name">My Yelp</string>
 </resources>
