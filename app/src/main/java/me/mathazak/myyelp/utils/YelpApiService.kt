@@ -1,5 +1,6 @@
 package me.mathazak.myyelp.utils
 
+import me.mathazak.myyelp.models.YelpSearchResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -11,5 +12,5 @@ interface YelpApiService {
         @Header("authorization") authorization: String,
         @Query("term") searchTerm: String,
         @Query("location") location: String
-    ): Call<Any>
+    ): Call<YelpSearchResult>
 }
