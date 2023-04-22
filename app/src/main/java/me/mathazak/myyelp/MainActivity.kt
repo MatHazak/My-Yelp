@@ -23,15 +23,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvBusinesses: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setApi()
         setRecyclerView()
-        searchBusinesses("vegan", "new york")
+        searchBusinesses("berger", "new york")
     }
 
     private fun setRecyclerView() {
-        rvBusinesses = findViewById(R.id.rvBusinesses)
+        rvBusinesses = this.findViewById(R.id.rvBusinesses)
         rvBusinesses.adapter = BusinessesAdapter(this, businessesResult)
         rvBusinesses.layoutManager = LinearLayoutManager(this)
     }
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateResults(businesses: List<YelpBusiness>) {
+        businessesResult.clear()
         businessesResult.addAll(businesses)
         rvBusinesses.adapter!!.notifyDataSetChanged()
     }

@@ -6,7 +6,7 @@ data class YelpBusiness(
     val name: String,
     val rating: Double,
     val price: String,
-    @SerializedName("review_counts") val numberOfReviews: Int,
+    @SerializedName("review_count") val numberOfReviews: Int,
     @SerializedName("distance") val distanceInMeter: Double,
     @SerializedName("image_url") val imageUrl: String,
     val categories: List<YelpBusinessCategory>,
