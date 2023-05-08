@@ -3,4 +3,6 @@
     <string name="api_key">_45em3yx8PMHlBvUty-dl0HXu7Zigfmgy3Sle2AfLgyySJ4-ppNY_1d8o7MU-G8CmRMgyLzOXURiLCadUoQGF2bT0ESrGTlIGkjdmS6aok1wbZSzDpAhD2uC2otCZHYx</string>
     <string name="app_name">My Yelp</string>
     <string name="review_ph">%d Reviews</string>
+    <string name="new_search">New Search</string>
+    <string name="image_of_business">Image Of Business</string>
 </resources>

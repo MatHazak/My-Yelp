@@ -1,8 +1,11 @@
 package me.mathazak.myyelp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.mathazak.myyelp.models.YelpBusiness
@@ -31,6 +34,25 @@ class MainActivity : AppCompatActivity() {
         searchBusinesses("berger", "new york")
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.newSearch){
+            newSearch()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun newSearch() {
+        val intent = Intent(this, NewSearchActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun setRecyclerView() {
         rvBusinesses = this.findViewById(R.id.rvBusinesses)
         rvBusinesses.adapter = BusinessesAdapter(this, businessesResult)
@@ -50,15 +72,15 @@ class MainActivity : AppCompatActivity() {
             location).enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(call: Call<YelpSearchResult>, response: Response<YelpSearchResult>) {
                 Log.i(TAG, "start on response")
-                if (response.body() == null) {
+                if (response.body() != null) {
+                    updateResults(response.body()!!.businesses)
+                    Log.i(TAG, businessesResult.toString())
+                } else {
                     Log.w(
                         TAG, """""Didn't receive valid response.
                             HTTP status code: ${response.code()}
                             Error: ${response.errorBody()}""".trimIndent()
                     )
-                } else {
-                    updateResults(response.body()!!.businesses)
-                    Log.i(TAG, businessesResult.toString())
                 }
             }
             override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
