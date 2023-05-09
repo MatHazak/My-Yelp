@@ -11,6 +11,7 @@ interface YelpApiService {
     fun searchBusinesses(
         @Header("authorization") authorization: String,
         @Query("term") searchTerm: String,
-        @Query("location") location: String
+        @Query("location") location: String,
+        @Query("categories") categories: String,
     ): Call<YelpSearchResult>
 }

@@ -1,7 +1,6 @@
 package me.mathazak.myyelp.utils
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -36,7 +35,7 @@ class BusinessesAdapter(private val context: Context, private val businesses: Li
             itemView.findViewById<TextView>(R.id.tvPrice).text = business.price
             itemView.findViewById<TextView>(R.id.tvReviewNumbers).text = context.getString(R.string.review_ph, business.numberOfReviews)
             itemView.findViewById<TextView>(R.id.tvAddress).text = business.location.address
-            itemView.findViewById<TextView>(R.id.tvCategory).text = business.categories[0].title
+            itemView.findViewById<TextView>(R.id.tvCategory).text = business.categories.getOrNull(0)?.title ?: "No Category"
             itemView.findViewById<TextView>(R.id.tvDistance).text = business.displayDistance()
             Glide.with(context).load(business.imageUrl)
                 .placeholder(ColorDrawable(context.getColor(R.color.md_theme_dark_error)))
