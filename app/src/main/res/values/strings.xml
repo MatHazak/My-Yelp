@@ -8,6 +8,7 @@
     <string name="categories">Categories:</string>
     <string name="search">Search</string>
     <string name="key_search">searchKey</string>
+    <string name="theme_switch">themeSwitch</string>
 
 
     <!--    api utils-->

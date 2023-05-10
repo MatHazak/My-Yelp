@@ -54,7 +54,7 @@ class NewSearchActivity : AppCompatActivity() {
         val newYelpSearch = YelpSearch(term, location, categories)
         val intent = Intent()
         intent.putExtra(getString(R.string.key_search), newYelpSearch)
-        // TODO: split string resources to ui and util resources for constants and ui elements
+        // ToDo: split string resources to ui and util resources for constants and ui elements
         setResult(RESULT_OK, intent)
         finish()
     }

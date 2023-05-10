@@ -1,14 +1,20 @@
 package me.mathazak.myyelp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Switch
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.mathazak.myyelp.models.YelpBusiness
@@ -33,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult(),
         ::onSearchActivityResult,
     )
-
+    private lateinit var themeSwitch: Switch
+    private lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -42,27 +49,46 @@ class MainActivity : AppCompatActivity() {
         setApi()
         setRecyclerView()
         searchBusinesses(YelpSearch("", "new york", "sandwich,seafood"))
+        preferences = getPreferences(Context.MODE_PRIVATE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        // TODO: add dark-mode option to bar
+        themeSwitch =
+            menu?.findItem(R.id.themeSwitchBar)?.actionView?.findViewById(R.id.themeSwitch)!!
+        updateUI()
+        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            preferences.edit().putBoolean(getString(R.string.theme_switch), isChecked).apply()
+            updateUI()
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.newSearch){
+        return if (item.itemId == R.id.newSearch) {
             val intent = Intent(this, NewSearchActivity::class.java)
             searchActivityLauncher.launch(intent)
+            // TODO: add last search to shared preferences
             true
-        } else {
+        } else
             super.onOptionsItemSelected(item)
-        }
+    }
+
+    override fun recreate() {
+        finish()
+        overridePendingTransition(
+            androidx.appcompat.R.anim.abc_fade_in,
+            androidx.appcompat.R.anim.abc_fade_out)
+        startActivity(intent)
+        overridePendingTransition(
+            androidx.appcompat.R.anim.abc_fade_in,
+            androidx.appcompat.R.anim.abc_fade_out)
     }
 
     private fun onSearchActivityResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
-            val newSearch = result.data?.getSerializableExtra(getString(R.string.key_search)) as YelpSearch
+            val newSearch =
+                result.data?.getSerializableExtra(getString(R.string.key_search)) as YelpSearch
             searchBusinesses(newSearch)
         } else
             Log.e(TAG, "Can't get desired result from search activity.")
@@ -87,17 +113,21 @@ class MainActivity : AppCompatActivity() {
             yelpSearch.location,
             yelpSearch.categories,
         ).enqueue(object : Callback<YelpSearchResult> {
-            override fun onResponse(call: Call<YelpSearchResult>, response: Response<YelpSearchResult>) {
+            override fun onResponse(
+                call: Call<YelpSearchResult>,
+                response: Response<YelpSearchResult>
+            ) {
                 if (response.body() != null) {
                     showResults(response.body()!!.businesses)
                 } else {
-                    Log.w(
+                    Log.e(
                         TAG, """""Didn't receive valid response.
                             HTTP status code: ${response.code()}
                             Error: ${response.errorBody()}""".trimIndent()
                     )
                 }
             }
+
             override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
                 Log.e(TAG, "Request to server failed: $t ")
             }
@@ -108,5 +138,19 @@ class MainActivity : AppCompatActivity() {
         businessesResult.clear()
         businessesResult.addAll(businesses)
         rvBusinesses.adapter!!.notifyDataSetChanged()
+    }
+
+    private fun updateUI() {
+        themeSwitch.apply {
+            isChecked = preferences.getBoolean(getString(R.string.theme_switch), false)
+            if (isChecked) {
+                setDefaultNightMode(MODE_NIGHT_YES)
+                Log.d(TAG, "in menu item finder, switch checked in bar caught!!")
+
+            } else {
+                setDefaultNightMode(MODE_NIGHT_NO)
+                Log.d(TAG, "in menu item finder, switch not checked in bar caught!!")
+            }
+        }
     }
 }

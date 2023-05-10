@@ -8,4 +8,9 @@
             app:showAsAction="ifRoom|withText"
             android:id="@+id/newSearch"
             android:visible="true" />
+    <item
+            android:id="@+id/themeSwitchBar"
+            app:showAsAction="always"
+            app:actionLayout="@layout/theme_switch"
+            android:title="" />
 </menu>
