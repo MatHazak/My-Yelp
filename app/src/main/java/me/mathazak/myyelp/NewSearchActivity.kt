@@ -12,7 +12,7 @@ import me.mathazak.myyelp.models.YelpSearch
 
 class NewSearchActivity : AppCompatActivity() {
 
-    private lateinit var cbCategories: List<CheckBox>
+    private lateinit var cbCategories: List<Pair<CheckBox, String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,15 +23,15 @@ class NewSearchActivity : AppCompatActivity() {
     }
 
     private fun addCategories() {
-        cbCategories = listOf<CheckBox>(
-            findViewById(R.id.cbPizza),
-            findViewById(R.id.cbCafes),
-            findViewById(R.id.cbBars),
-            findViewById(R.id.cbDonuts),
-            findViewById(R.id.cbIndian),
-            findViewById(R.id.cbSalad),
-            findViewById(R.id.cbSandwich),
-            findViewById(R.id.cbSeafood),
+        cbCategories = listOf<Pair<CheckBox, String>>(
+            Pair(findViewById(R.id.cbPizza), getString(R.string.api_pizza)),
+            Pair(findViewById(R.id.cbCafes), getString(R.string.api_cafes)),
+            Pair(findViewById(R.id.cbBars), getString(R.string.api_bars)),
+            Pair(findViewById(R.id.cbDonuts), getString(R.string.api_donuts)),
+            Pair(findViewById(R.id.cbIndian), getString(R.string.api_indian)),
+            Pair(findViewById(R.id.cbSalad), getString(R.string.api_salad)),
+            Pair(findViewById(R.id.cbSandwich), getString(R.string.api_sandwich)),
+            Pair(findViewById(R.id.cbSeafood), getString(R.string.api_seafood)),
         )
     }
 
@@ -54,7 +54,6 @@ class NewSearchActivity : AppCompatActivity() {
         val newYelpSearch = YelpSearch(term, location, categories)
         val intent = Intent()
         intent.putExtra(getString(R.string.key_search), newYelpSearch)
-        // ToDo: split string resources to ui and util resources for constants and ui elements
         setResult(RESULT_OK, intent)
         finish()
     }
@@ -62,8 +61,8 @@ class NewSearchActivity : AppCompatActivity() {
     private fun getCategories(): String {
         val categories = mutableListOf<String>()
         cbCategories.forEach {
-            if (it.isChecked)
-                categories.add(it.text.toString())
+            if (it.first.isChecked)
+                categories.add(it.second)
         }
         return categories.joinToString(",")
     }

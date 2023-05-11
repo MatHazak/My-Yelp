@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="review_ph">%d Reviews</string>
+    <string name="new_search">New Search</string>
+    <string name="image_of_business">Image Of Business</string>
+    <string name="term">Term</string>
+    <string name="location">Location:</string>
+    <string name="categories">Categories:</string>
+    <string name="search">Search</string>
+
+    <!--    categories-->
+    <string name="pizza">Pizza</string>
+    <string name="cafes">Cafes</string>
+    <string name="bars">Bars</string>
+    <string name="indian">Indian</string>
+    <string name="salad">Salad</string>
+    <string name="donuts">Donuts</string>
+    <string name="seafood">Seafood</string>
+    <string name="sandwich">Sandwich</string>
+
+</resources>

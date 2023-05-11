@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun searchBusinesses(yelpSearch: YelpSearch) {
         yelpService.searchBusinesses(
-            getString(R.string.authorization, getString(R.string.api_key)),
+            getString(R.string.authorization_ph, getString(R.string.api_key)),
             yelpSearch.term,
             yelpSearch.location,
             yelpSearch.categories,
