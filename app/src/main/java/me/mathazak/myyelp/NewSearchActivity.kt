@@ -53,7 +53,7 @@ class NewSearchActivity : AppCompatActivity() {
         val categories = getCategories()
         val newYelpSearch = YelpSearch(term, location, categories)
         val intent = Intent()
-        intent.putExtra(getString(R.string.key_search), newYelpSearch)
+        intent.putExtra(getString(R.string.search_activity_key), newYelpSearch)
         setResult(RESULT_OK, intent)
         finish()
     }

@@ -1,7 +1,6 @@
 package me.mathazak.myyelp
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Switch
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
@@ -28,9 +28,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-    private const val TAG = "MainActivity"
+private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
-
 
     private lateinit var yelpService: YelpApiService
     private var businessesResult = mutableListOf<YelpBusiness>()
@@ -46,20 +45,19 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        preferences = getPreferences(MODE_PRIVATE)
         setApi()
         setRecyclerView()
-        searchBusinesses(YelpSearch("", "new york", "sandwich,seafood"))
-        preferences = getPreferences(Context.MODE_PRIVATE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         themeSwitch =
             menu?.findItem(R.id.themeSwitchBar)?.actionView?.findViewById(R.id.themeSwitch)!!
-        updateUI()
+        updateUi()
         themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            preferences.edit().putBoolean(getString(R.string.theme_switch), isChecked).apply()
-            updateUI()
+            preferences.edit().putBoolean(getString(R.string.theme_switch_key), isChecked).apply()
+            updateUi()
         }
         return true
     }
@@ -68,7 +66,6 @@ class MainActivity : AppCompatActivity() {
         return if (item.itemId == R.id.newSearch) {
             val intent = Intent(this, NewSearchActivity::class.java)
             searchActivityLauncher.launch(intent)
-            // TODO: add last search to shared preferences
             true
         } else
             super.onOptionsItemSelected(item)
@@ -88,7 +85,11 @@ class MainActivity : AppCompatActivity() {
     private fun onSearchActivityResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             val newSearch =
-                result.data?.getSerializableExtra(getString(R.string.key_search)) as YelpSearch
+                result.data?.getSerializableExtra(getString(R.string.search_activity_key)) as YelpSearch
+            preferences.edit()
+                .putString(getString(R.string.search_term_key), newSearch.term)
+                .putString(getString(R.string.search_location_key), newSearch.location)
+                .putString(getString(R.string.search_categories_key), newSearch.categories).apply()
             searchBusinesses(newSearch)
         } else
             Log.e(TAG, "Can't get desired result from search activity.")
@@ -117,40 +118,41 @@ class MainActivity : AppCompatActivity() {
                 call: Call<YelpSearchResult>,
                 response: Response<YelpSearchResult>
             ) {
-                if (response.body() != null) {
-                    showResults(response.body()!!.businesses)
-                } else {
-                    Log.e(
-                        TAG, """""Didn't receive valid response.
+                if (response.body() != null)
+                    showSearchResults(response.body())
+                else
+                    Log.e(TAG,
+                        """""Didn't receive valid response.
                             HTTP status code: ${response.code()}
                             Error: ${response.errorBody()}""".trimIndent()
                     )
-                }
             }
-
             override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
                 Log.e(TAG, "Request to server failed: $t ")
             }
         })
     }
 
-    private fun showResults(businesses: List<YelpBusiness>) {
-        businessesResult.clear()
-        businessesResult.addAll(businesses)
-        rvBusinesses.adapter!!.notifyDataSetChanged()
+    private fun showSearchResults(searchResult: YelpSearchResult?) {
+        if (searchResult?.businesses != null) {
+            businessesResult.clear()
+            businessesResult.addAll(searchResult.businesses)
+            rvBusinesses.adapter!!.notifyDataSetChanged()
+        } else {
+            Toast.makeText(this, "Can't get result from the server.", Toast.LENGTH_LONG).show()
+        }
     }
 
-    private fun updateUI() {
+    private fun updateUi() {
         themeSwitch.apply {
-            isChecked = preferences.getBoolean(getString(R.string.theme_switch), false)
-            if (isChecked) {
-                setDefaultNightMode(MODE_NIGHT_YES)
-                Log.d(TAG, "in menu item finder, switch checked in bar caught!!")
-
-            } else {
-                setDefaultNightMode(MODE_NIGHT_NO)
-                Log.d(TAG, "in menu item finder, switch not checked in bar caught!!")
-            }
+            isChecked = preferences.getBoolean(getString(R.string.theme_switch_key), false)
+            setDefaultNightMode(if (isChecked) MODE_NIGHT_YES else MODE_NIGHT_NO)
         }
+        val lastSearch = YelpSearch(
+            preferences.getString(getString(R.string.search_term_key), "")!!,
+            preferences.getString(getString(R.string.search_location_key), "New York")!!,
+            preferences.getString(getString(R.string.search_categories_key), "")!!,
+        )
+        searchBusinesses(lastSearch)
     }
 }
