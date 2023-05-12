@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import me.mathazak.myyelp.databinding.ActivityMainBinding
 import me.mathazak.myyelp.models.YelpBusiness
 import me.mathazak.myyelp.models.YelpSearch
 import me.mathazak.myyelp.models.YelpSearchResult
@@ -31,9 +31,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var yelpService: YelpApiService
     private var businessesResult = mutableListOf<YelpBusiness>()
-    private lateinit var rvBusinesses: RecyclerView
     private val searchActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
         ::onSearchActivityResult,
@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         preferences = getPreferences(MODE_PRIVATE)
         setApi()
         setRecyclerView()
@@ -96,9 +97,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        rvBusinesses = this.findViewById(R.id.rvBusinesses)
-        rvBusinesses.adapter = BusinessesAdapter(this, businessesResult)
-        rvBusinesses.layoutManager = LinearLayoutManager(this)
+        binding.rvBusinesses.adapter = BusinessesAdapter(businessesResult)
+        binding.rvBusinesses.layoutManager = LinearLayoutManager(this)
     }
 
     private fun setApi() {
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         if (searchResult?.businesses != null) {
             businessesResult.clear()
             businessesResult.addAll(searchResult.businesses)
-            rvBusinesses.adapter!!.notifyDataSetChanged()
+            binding.rvBusinesses.adapter!!.notifyDataSetChanged()
         } else {
             Toast.makeText(this, "Can't get result from the server.", Toast.LENGTH_LONG).show()
         }

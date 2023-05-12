@@ -4,39 +4,39 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Spinner
+import me.mathazak.myyelp.databinding.ActivityNewSearchBinding
 import me.mathazak.myyelp.models.YelpSearch
 
 class NewSearchActivity : AppCompatActivity() {
 
     private lateinit var cbCategories: List<Pair<CheckBox, String>>
+    private lateinit var binding: ActivityNewSearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_search)
+        binding = ActivityNewSearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setLocationSpinner()
         addCategories()
-        findViewById<Button>(R.id.searchButton).setOnClickListener { search() }
+        binding.searchButton.setOnClickListener { search() }
     }
 
     private fun addCategories() {
-        cbCategories = listOf<Pair<CheckBox, String>>(
-            Pair(findViewById(R.id.cbPizza), getString(R.string.api_pizza)),
-            Pair(findViewById(R.id.cbCafes), getString(R.string.api_cafes)),
-            Pair(findViewById(R.id.cbBars), getString(R.string.api_bars)),
-            Pair(findViewById(R.id.cbDonuts), getString(R.string.api_donuts)),
-            Pair(findViewById(R.id.cbIndian), getString(R.string.api_indian)),
-            Pair(findViewById(R.id.cbSalad), getString(R.string.api_salad)),
-            Pair(findViewById(R.id.cbSandwich), getString(R.string.api_sandwich)),
-            Pair(findViewById(R.id.cbSeafood), getString(R.string.api_seafood)),
+        cbCategories = listOf(
+            binding.cbPizza to getString(R.string.api_pizza),
+            binding.cbCafes to getString(R.string.api_cafes),
+            binding.cbBars to getString(R.string.api_bars),
+            binding.cbDonuts to getString(R.string.api_donuts),
+            binding.cbIndian to getString(R.string.api_indian),
+            binding.cbSalad to getString(R.string.api_salad),
+            binding.cbSandwich to getString(R.string.api_sandwich),
+            binding.cbSeafood to getString(R.string.api_seafood),
         )
     }
 
     private fun setLocationSpinner() {
-        val spinner: Spinner = findViewById(R.id.locationSpinner)
+        val spinner = binding.locationSpinner
         ArrayAdapter.createFromResource(
             this,
             R.array.locations_array,
@@ -48,8 +48,8 @@ class NewSearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        val term = findViewById<EditText>(R.id.etTerm).text.toString()
-        val location = findViewById<Spinner>(R.id.locationSpinner).selectedItem.toString()
+        val term = binding.etTerm.text.toString()
+        val location = binding.locationSpinner.selectedItem.toString()
         val categories = getCategories()
         val newYelpSearch = YelpSearch(term, location, categories)
         val intent = Intent()
