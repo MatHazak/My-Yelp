@@ -7,11 +7,11 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:thumb="@drawable/thumb_list"
-            android:paddingEnd="20dp"
-            android:paddingStart="0dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="5dp"
             android:id="@+id/themeSwitch"
             app:showText="false"
             android:track="@drawable/track_background"
-            android:layout_centerInParent="true"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_centerInParent="true" />
 </RelativeLayout>

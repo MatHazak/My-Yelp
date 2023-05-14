@@ -1,42 +1,36 @@
 package me.mathazak.myyelp
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.Switch
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.recyclerview.widget.LinearLayoutManager
-import me.mathazak.myyelp.databinding.ActivityMainBinding
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.data.YelpSearchRequest
-import me.mathazak.myyelp.data.YelpSearchResult
-import me.mathazak.myyelp.utils.YelpApiService
-
-private const val TAG = "MainActivity"
+import me.mathazak.myyelp.databinding.ActivityMainBinding
+import me.mathazak.myyelp.utils.ItemClickListener
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var yelpService: YelpApiService
-    private var businessesResult = mutableListOf<YelpBusiness>()
-    private val searchActivityLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-        ::onSearchActivityResult,
-    )
     private val businessesViewModel: BusinessViewModel by viewModels {
         BusinessViewModelFactory((application as YelpApplication).repository)
     }
+    private lateinit var cbCategoriesList: List<Pair<CheckBox, String>>
+
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var themeSwitch: Switch
     private lateinit var preferences: SharedPreferences
 
@@ -48,16 +42,27 @@ class MainActivity : AppCompatActivity() {
         preferences = getPreferences(MODE_PRIVATE)
 
         val adapter = BusinessesAdapter()
+        adapter.setItemListener(object : ItemClickListener {
+            override fun onSwitchChange(checked: Boolean, yelpBusiness: YelpBusiness) {
+                if (checked)
+                    businessesViewModel.insert(yelpBusiness)
+                else
+                    businessesViewModel.delete(yelpBusiness)
+            }
+        })
         binding.rvSearchedBusinesses.adapter = adapter
         binding.rvSearchedBusinesses.layoutManager = LinearLayoutManager(this)
 
-        businessesViewModel.likedBusinesses.observe(this) { it ->
+        businessesViewModel.searchedBusinesses.observe(this) {
             adapter.submitList(it)
         }
 
-        businessesViewModel.searchedBusinesses.observe(this) {
-
+        propSearchBar()
+        binding.searchButton.setOnClickListener {
+            binding.clSearch.visibility = GONE
+            searchBusinesses()
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,12 +78,62 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.newSearch) {
-            val intent = Intent(this, NewSearchActivity::class.java)
-            searchActivityLauncher.launch(intent)
-            true
-        } else
-            super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.newSearch -> {
+                binding.clSearch.apply {
+                    visibility = if (visibility == GONE)
+                        VISIBLE
+                    else
+                        GONE
+                }
+                true
+            }
+
+            R.id.favorites -> {
+                startActivity(Intent(this, FavoriteBusinessesActivity::class.java))
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun searchBusinesses() {
+        val term = binding.etTerm.text.toString()
+        val location = binding.locationSpinner.selectedItem.toString()
+        val categories =
+            cbCategoriesList.filter { it.first.isChecked }.joinToString(",") { it.second }
+        val yelpSearchRequest = YelpSearchRequest(term, location, categories)
+        businessesViewModel.fetchNewSearch(yelpSearchRequest)
+    }
+
+    private fun propSearchBar() {
+        val spinner = binding.locationSpinner
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.locations_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+        }
+        cbCategoriesList = listOf(
+            binding.cbPizza to getString(R.string.api_pizza),
+            binding.cbCafes to getString(R.string.api_cafes),
+            binding.cbBars to getString(R.string.api_bars),
+            binding.cbDonuts to getString(R.string.api_donuts),
+            binding.cbIndian to getString(R.string.api_indian),
+            binding.cbSalad to getString(R.string.api_salad),
+            binding.cbSandwich to getString(R.string.api_sandwich),
+            binding.cbSeafood to getString(R.string.api_seafood),
+        )
+    }
+
+    private fun updateUi() {
+        themeSwitch.apply {
+            isChecked = preferences.getBoolean(getString(R.string.theme_switch_key), false)
+            setDefaultNightMode(if (isChecked) MODE_NIGHT_YES else MODE_NIGHT_NO)
+        }
     }
 
     override fun recreate() {
@@ -92,48 +147,5 @@ class MainActivity : AppCompatActivity() {
             androidx.appcompat.R.anim.abc_fade_in,
             androidx.appcompat.R.anim.abc_fade_out
         )
-    }
-
-    private fun onSearchActivityResult(result: ActivityResult) {
-        if (result.resultCode == Activity.RESULT_OK) {
-            val newSearch =
-                result.data?.getSerializableExtra(getString(R.string.search_activity_key)) as YelpSearchRequest
-            preferences.edit()
-                .putString(getString(R.string.search_term_key), newSearch.term)
-                .putString(getString(R.string.search_location_key), newSearch.location)
-                .putString(getString(R.string.search_categories_key), newSearch.categories).apply()
-            searchBusinesses(newSearch)
-        } else
-            Log.e(TAG, "Can't get desired result from search activity.")
-    }
-
-    private fun setApi() {
-    }
-
-    private fun searchBusinesses(yelpSearchRequest: YelpSearchRequest) {
-    }
-
-    private fun showSearchResults(searchResult: YelpSearchResult?) {
-        if (searchResult?.businesses != null) {
-            businessesResult.clear()
-            businessesResult.addAll(searchResult.businesses)
-            binding.rvSearchedBusinesses.adapter!!.notifyDataSetChanged()
-        } else {
-            Toast.makeText(this, "Can't get result from the server.", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun updateUi() {
-        getString(R.string.authorization_ph, getString(R.string.api_key))
-        themeSwitch.apply {
-            isChecked = preferences.getBoolean(getString(R.string.theme_switch_key), false)
-            setDefaultNightMode(if (isChecked) MODE_NIGHT_YES else MODE_NIGHT_NO)
-        }
-        val lastSearch = YelpSearchRequest(
-            preferences.getString(getString(R.string.search_term_key), "")!!,
-            preferences.getString(getString(R.string.search_location_key), "New York")!!,
-            preferences.getString(getString(R.string.search_categories_key), "")!!,
-        )
-        searchBusinesses(lastSearch)
     }
 }

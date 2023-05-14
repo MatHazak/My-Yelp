@@ -16,6 +16,7 @@ data class YelpBusiness(
     @SerializedName("image_url") val imageUrl: String,
     val categories: List<YelpBusinessCategory>,
     val location: YelpBusinessLocation,
+    var favorite: Boolean = false,
 ) {
     fun displayDistance():String {
         return "${(distanceInMeter % 1000).toInt()} Km"

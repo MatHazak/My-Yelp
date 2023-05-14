@@ -16,12 +16,8 @@
             android:theme="@style/AppTheme"
             tools:targetApi="31">
         <activity
-                android:name=".LikedBusinessesActivity"
+                android:name=".FavoriteBusinessesActivity"
                 android:exported="false" />
-        <activity
-                android:name=".NewSearchActivity"
-                android:exported="false"
-                android:label="@string/new_search" />
         <activity
                 android:name=".MainActivity"
                 android:exported="true">

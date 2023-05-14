@@ -12,30 +12,43 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
 import me.mathazak.myyelp.data.YelpBusiness
+import me.mathazak.myyelp.utils.ItemClickListener
 
 class BusinessesAdapter :
     ListAdapter<YelpBusiness, BusinessesAdapter.BusinessViewHolder>(businessComparator) {
 
+    private lateinit var itemClickListener: ItemClickListener
+
     companion object {
         private val businessComparator = object : DiffUtil.ItemCallback<YelpBusiness>() {
-            override fun areItemsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) = oldItem === newItem
-            override fun areContentsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) = oldItem == newItem
+            override fun areItemsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
+                oldItem === newItem
+
+            override fun areContentsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
+                oldItem == newItem
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BusinessViewHolder {
-        return BusinessViewHolder(
-            ItemBusinessBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val itemBinding = ItemBusinessBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+        return BusinessViewHolder(itemBinding).also { viewHolder ->
+            itemBinding.favoriteSwitch.setOnCheckedChangeListener { _, checked ->
+                itemClickListener.onSwitchChange(checked , getItem(viewHolder.layoutPosition))
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: BusinessViewHolder, position: Int) {
         val business = getItem(position)
         holder.bind(business)
+    }
+
+    fun setItemListener(listener: ItemClickListener) {
+        this.itemClickListener = listener
     }
 
     inner class BusinessViewHolder(private val itemBinding: ItemBusinessBinding) :

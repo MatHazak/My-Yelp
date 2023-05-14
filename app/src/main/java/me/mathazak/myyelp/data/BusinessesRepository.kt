@@ -22,12 +22,17 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
             .create(YelpApiService::class.java)
 
 
-    val likedBusinesses = businessDao.loadAllBusinesses()
+    val favoriteBusinesses = businessDao.loadAllBusinesses()
     val searchedBusinesses = MutableLiveData<List<YelpBusiness>>()
 
     @WorkerThread
     suspend fun insert(business: YelpBusiness) {
         businessDao.insert(business)
+    }
+
+    @WorkerThread
+    suspend fun delete(business: YelpBusiness) {
+        businessDao.delete(business)
     }
 
     fun searchBusinesses(yelpSearchRequest: YelpSearchRequest) {

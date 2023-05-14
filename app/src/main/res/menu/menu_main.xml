@@ -3,14 +3,19 @@
 
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
-            android:title="@string/new_search"
+            android:title=""
             android:icon="?android:attr/actionModeWebSearchDrawable"
-            app:showAsAction="ifRoom|withText"
+            app:showAsAction="ifRoom"
             android:id="@+id/newSearch"
             android:visible="true" />
     <item
+            android:title=""
+            android:id="@+id/favorites"
+            android:icon="?android:attr/fingerprintAuthDrawable"
+            app:showAsAction="ifRoom" />
+    <item
             android:id="@+id/themeSwitchBar"
-            app:showAsAction="always"
+            app:showAsAction="ifRoom"
             app:actionLayout="@layout/theme_switch"
             android:title="" />
 </menu>
