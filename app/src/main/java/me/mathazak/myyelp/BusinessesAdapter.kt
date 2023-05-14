@@ -12,12 +12,14 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
 import me.mathazak.myyelp.data.YelpBusiness
+import me.mathazak.myyelp.utils.BusinessQuery
 import me.mathazak.myyelp.utils.ItemClickListener
 
 class BusinessesAdapter :
     ListAdapter<YelpBusiness, BusinessesAdapter.BusinessViewHolder>(businessComparator) {
 
     private lateinit var itemClickListener: ItemClickListener
+    private lateinit var businessQuery: BusinessQuery
 
     companion object {
         private val businessComparator = object : DiffUtil.ItemCallback<YelpBusiness>() {
@@ -51,6 +53,10 @@ class BusinessesAdapter :
         this.itemClickListener = listener
     }
 
+    fun setBusinessQuery(query: BusinessQuery) {
+        this.businessQuery = query
+    }
+
     inner class BusinessViewHolder(private val itemBinding: ItemBusinessBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(business: YelpBusiness) {
@@ -66,6 +72,7 @@ class BusinessesAdapter :
                 .placeholder(ColorDrawable(itemBinding.root.context.getColor(R.color.md_theme_dark_error)))
                 .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(15)))
                 .into(itemView.findViewById(R.id.ivBusiness))
+            itemBinding.favoriteSwitch.isChecked = businessQuery.isFavorite(business)
         }
     }
 }

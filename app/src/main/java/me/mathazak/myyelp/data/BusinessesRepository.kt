@@ -64,10 +64,10 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
     }
 
     private fun getAuthorizationString(): String {
-        return YelpApplication.getRes()?.let { resource ->
-            resource.getString(
+        return YelpApplication.getRes()?.let {
+            it.getString(
                 R.string.authorization_ph,
-                resource.getString(R.string.api_key)
+                it.getString(R.string.api_key)
             )
         } ?: ""
     }

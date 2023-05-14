@@ -26,7 +26,8 @@ class BusinessViewModel(private val repository: BusinessesRepository) : ViewMode
     }
 }
 
-class BusinessViewModelFactory(private val repository: BusinessesRepository) : ViewModelProvider.Factory {
+class BusinessViewModelFactory(private val repository: BusinessesRepository) :
+    ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BusinessViewModel::class.java)) {
             return BusinessViewModel(repository) as T

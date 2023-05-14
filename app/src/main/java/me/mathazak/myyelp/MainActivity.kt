@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.data.YelpSearchRequest
 import me.mathazak.myyelp.databinding.ActivityMainBinding
+import me.mathazak.myyelp.utils.BusinessQuery
 import me.mathazak.myyelp.utils.ItemClickListener
 
 class MainActivity : AppCompatActivity() {
@@ -44,14 +45,25 @@ class MainActivity : AppCompatActivity() {
         val adapter = BusinessesAdapter()
         adapter.setItemListener(object : ItemClickListener {
             override fun onSwitchChange(checked: Boolean, yelpBusiness: YelpBusiness) {
-                if (checked)
-                    businessesViewModel.insert(yelpBusiness)
-                else
-                    businessesViewModel.delete(yelpBusiness)
+                businessesViewModel.apply {
+                    if (checked)
+                        insert(yelpBusiness)
+                    else
+                        delete(yelpBusiness)
+                }
             }
+        })
+        var favoriteBusinesses = listOf<YelpBusiness>()
+        adapter.setBusinessQuery(object : BusinessQuery {
+            override fun isFavorite(yelpBusiness: YelpBusiness) =
+                favoriteBusinesses.contains(yelpBusiness)
         })
         binding.rvSearchedBusinesses.adapter = adapter
         binding.rvSearchedBusinesses.layoutManager = LinearLayoutManager(this)
+
+        businessesViewModel.favoriteBusinesses.observe(this) {
+            favoriteBusinesses = it
+        }
 
         businessesViewModel.searchedBusinesses.observe(this) {
             adapter.submitList(it)

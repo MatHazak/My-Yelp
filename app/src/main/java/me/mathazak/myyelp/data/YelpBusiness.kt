@@ -10,15 +10,14 @@ data class YelpBusiness(
     @PrimaryKey val id: String,
     val name: String,
     val rating: Double,
-    val price: String,
+    val price: String?,
     @SerializedName("review_count") val numberOfReviews: Int,
     @SerializedName("distance") val distanceInMeter: Double,
     @SerializedName("image_url") val imageUrl: String,
     val categories: List<YelpBusinessCategory>,
     val location: YelpBusinessLocation,
-    var favorite: Boolean = false,
 ) {
-    fun displayDistance():String {
+    fun displayDistance(): String {
         return "${(distanceInMeter % 1000).toInt()} Km"
     }
 }
@@ -35,7 +34,7 @@ class Converters {
 
     @TypeConverter
     fun fromLocationStamp(value: String?): YelpBusinessLocation? {
-        return value?.let { YelpBusinessLocation(value)}
+        return value?.let { YelpBusinessLocation(value) }
     }
 
     @TypeConverter
@@ -45,7 +44,7 @@ class Converters {
 
     @TypeConverter
     fun fromCategoriesStamp(value: String?): List<YelpBusinessCategory>? {
-        return value?.let { value.split("|").map { YelpBusinessCategory(it) }}
+        return value?.let { value.split("|").map { YelpBusinessCategory(it) } }
     }
 
     @TypeConverter
