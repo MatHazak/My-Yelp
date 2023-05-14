@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import me.mathazak.myyelp.databinding.ActivityNewSearchBinding
-import me.mathazak.myyelp.models.YelpSearch
+import me.mathazak.myyelp.data.YelpSearchRequest
 
 class NewSearchActivity : AppCompatActivity() {
 
@@ -51,9 +51,9 @@ class NewSearchActivity : AppCompatActivity() {
         val term = binding.etTerm.text.toString()
         val location = binding.locationSpinner.selectedItem.toString()
         val categories = getCategories()
-        val newYelpSearch = YelpSearch(term, location, categories)
+        val newYelpSearchRequest = YelpSearchRequest(term, location, categories)
         val intent = Intent()
-        intent.putExtra(getString(R.string.search_activity_key), newYelpSearch)
+        intent.putExtra(getString(R.string.search_activity_key), newYelpSearchRequest)
         setResult(RESULT_OK, intent)
         finish()
     }

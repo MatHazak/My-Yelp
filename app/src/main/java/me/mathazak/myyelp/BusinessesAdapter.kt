@@ -13,7 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
 import me.mathazak.myyelp.data.YelpBusiness
 
-class BusinessesAdapter(private val businesses: List<YelpBusiness>) :
+class BusinessesAdapter :
     ListAdapter<YelpBusiness, BusinessesAdapter.BusinessViewHolder>(businessComparator) {
 
     companion object {
@@ -34,7 +34,7 @@ class BusinessesAdapter(private val businesses: List<YelpBusiness>) :
     }
 
     override fun onBindViewHolder(holder: BusinessViewHolder, position: Int) {
-        val business = businesses[position]
+        val business = getItem(position)
         holder.bind(business)
     }
 

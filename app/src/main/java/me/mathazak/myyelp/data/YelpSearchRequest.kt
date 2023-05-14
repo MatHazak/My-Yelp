@@ -1,8 +1,8 @@
-package me.mathazak.myyelp.models
+package me.mathazak.myyelp.data
 
 import java.io.Serializable
 
-data class YelpSearch(
+data class YelpSearchRequest(
     val term: String,
     val location: String,
     val categories: String,

@@ -1,4 +1,4 @@
-package me.mathazak.myyelp.models
+package me.mathazak.myyelp.data
 
 data class YelpSearchResult(
     val total: Int,

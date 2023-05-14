@@ -1,6 +1,6 @@
 package me.mathazak.myyelp.utils
 
-import me.mathazak.myyelp.models.YelpSearchResult
+import me.mathazak.myyelp.data.YelpSearchResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
