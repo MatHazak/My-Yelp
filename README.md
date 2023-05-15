@@ -18,9 +18,13 @@ The app bar contains a dark-mode switch to change the app theme.
 <img src="https://github.com/MatHazak/My-Yelp/assets/97834376/d8bc4ecd-d3bd-4349-981b-d99cd363a0c9" alt="feed example" width="250">
 
 
-## Charachteristics
+## Characteristics
 
 * [Retrofit](https://github.com/square/retrofit): Handle API calls
 * [Glide](https://github.com/bumptech/glide): Fetch remote images into the app
-* [Room](https://developer.android.com/reference/androidx/room/package-summary.html): Store and retreive favorite businesses
+* [Room](https://developer.android.com/reference/androidx/room/package-summary.html): Store and retrieve favorite businesses
 * MVVM architecture
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
