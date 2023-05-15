@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
+import android.widget.AutoCompleteTextView
 import android.widget.Switch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity() {
     private val businessesViewModel: BusinessViewModel by viewModels {
         BusinessViewModelFactory((application as YelpApplication).repository)
     }
-    private lateinit var cbCategoriesList: List<Pair<CheckBox, String>>
-
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var themeSwitch: Switch
     private lateinit var preferences: SharedPreferences
@@ -75,6 +73,7 @@ class MainActivity : AppCompatActivity() {
             searchBusinesses()
         }
 
+        searchBusinesses()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -111,34 +110,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchBusinesses() {
-        val term = binding.etTerm.text.toString()
-        val location = binding.locationSpinner.selectedItem.toString()
-        val categories =
-            cbCategoriesList.filter { it.first.isChecked }.joinToString(",") { it.second }
-        val yelpSearchRequest = YelpSearchRequest(term, location, categories)
+        val term = binding.etTerm.editText?.text.toString()
+        val location = binding.locationMenu.editText?.text.toString()
+        val yelpSearchRequest = YelpSearchRequest(term, location)
         businessesViewModel.fetchNewSearch(yelpSearchRequest)
     }
 
     private fun propSearchBar() {
-        val spinner = binding.locationSpinner
+        val locationMenu = binding.locationMenu.editText as? AutoCompleteTextView
         ArrayAdapter.createFromResource(
             this,
             R.array.locations_array,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
+            locationMenu?.setAdapter(adapter)
+            locationMenu?.setText(adapter.getItem(0), false)
         }
-        cbCategoriesList = listOf(
-            binding.cbPizza to getString(R.string.api_pizza),
-            binding.cbCafes to getString(R.string.api_cafes),
-            binding.cbBars to getString(R.string.api_bars),
-            binding.cbDonuts to getString(R.string.api_donuts),
-            binding.cbIndian to getString(R.string.api_indian),
-            binding.cbSalad to getString(R.string.api_salad),
-            binding.cbSandwich to getString(R.string.api_sandwich),
-            binding.cbSeafood to getString(R.string.api_seafood),
-        )
     }
 
     private fun updateUi() {

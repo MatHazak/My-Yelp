@@ -5,5 +5,4 @@ import java.io.Serializable
 data class YelpSearchRequest(
     val term: String,
     val location: String,
-    val categories: String,
 ) : Serializable

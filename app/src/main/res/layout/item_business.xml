@@ -100,13 +100,18 @@
             android:textSize="12sp"
             tools:text="Breakfast &amp; Brunch" />
 
-    <androidx.appcompat.widget.SwitchCompat
+    <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:showText="false"
+            android:thumb="@drawable/heart_icons"
+            android:track="@null"
             android:id="@+id/favoriteSwitch"
-            app:track="@drawable/track_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="?attr/materialSwitchStyle" />
+            app:layout_constraintBottom_toBottomOf="@+id/tvPrice"
+            android:paddingStart="0dp"
+            android:paddingEnd="-15dp"
+            tools:ignore="TouchTargetSizeCheck,UseSwitchCompatOrMaterialXml"
+            app:layout_constraintTop_toTopOf="@+id/tvPrice" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

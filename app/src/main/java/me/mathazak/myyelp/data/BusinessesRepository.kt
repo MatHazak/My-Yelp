@@ -40,7 +40,6 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
             getAuthorizationString(),
             yelpSearchRequest.term,
             yelpSearchRequest.location,
-            yelpSearchRequest.categories,
         ).enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(
                 call: Call<YelpSearchResult>,
@@ -50,10 +49,7 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
                     searchedBusinesses.value = response.body()!!.businesses
                 else
                     Log.e(
-                        TAG,
-                        """""Didn't receive valid response.
-                            HTTP status code: ${response.code()}
-                            Error: ${response.errorBody()}""".trimIndent()
+                        TAG, "Didn't receive valid response. HTTP status code: ${response.code()}"
                     )
             }
 

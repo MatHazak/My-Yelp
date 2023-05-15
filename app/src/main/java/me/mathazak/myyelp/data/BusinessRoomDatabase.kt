@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 
 @Database(entities = [YelpBusiness::class], version = 1, exportSchema = false)
@@ -35,11 +34,5 @@ abstract class BusinessRoomDatabase : RoomDatabase() {
 
     private class BusinessDatabaseCallback(
         private val scope: CoroutineScope
-    ) : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { }
-        }
-    }
-
+    ) : Callback()
 }

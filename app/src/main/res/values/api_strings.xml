@@ -38,13 +38,4 @@
         <item>Vancouver</item>
         <item>Washington, DC</item>
     </string-array>
-
-    <string name="api_pizza">pizza</string>
-    <string name="api_cafes">cafes</string>
-    <string name="api_bars">bars</string>
-    <string name="api_indian">indian</string>
-    <string name="api_salad">salad</string>
-    <string name="api_donuts">donuts</string>
-    <string name="api_seafood">seafood</string>
-    <string name="api_sandwich">sandwich</string>
 </resources>
