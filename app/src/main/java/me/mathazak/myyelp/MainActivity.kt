@@ -20,8 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.data.YelpSearchRequest
 import me.mathazak.myyelp.databinding.ActivityMainBinding
-import me.mathazak.myyelp.utils.BusinessQuery
-import me.mathazak.myyelp.utils.ItemClickListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val businessesViewModel: BusinessViewModel by viewModels {
         BusinessViewModelFactory((application as YelpApplication).repository)
     }
+
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var themeSwitch: Switch
     private lateinit var preferences: SharedPreferences
@@ -41,21 +40,16 @@ class MainActivity : AppCompatActivity() {
         preferences = getPreferences(MODE_PRIVATE)
 
         val adapter = BusinessesAdapter()
-        adapter.setItemListener(object : ItemClickListener {
-            override fun onSwitchChange(checked: Boolean, yelpBusiness: YelpBusiness) {
-                businessesViewModel.apply {
-                    if (checked)
-                        insert(yelpBusiness)
-                    else
-                        delete(yelpBusiness)
-                }
+        adapter.setItemListener { checked, yelpBusiness ->
+            businessesViewModel.apply {
+                if (checked)
+                    insert(yelpBusiness)
+                else
+                    delete(yelpBusiness)
             }
-        })
+        }
         var favoriteBusinesses = listOf<YelpBusiness>()
-        adapter.setBusinessQuery(object : BusinessQuery {
-            override fun isFavorite(yelpBusiness: YelpBusiness) =
-                favoriteBusinesses.contains(yelpBusiness)
-        })
+        adapter.setBusinessQuery(favoriteBusinesses::contains)
         binding.rvSearchedBusinesses.adapter = adapter
         binding.rvSearchedBusinesses.layoutManager = LinearLayoutManager(this)
 
