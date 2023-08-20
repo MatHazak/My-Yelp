@@ -1,17 +1,15 @@
 package me.mathazak.myyelp
 
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
-import me.mathazak.myyelp.databinding.ItemBusinessBinding
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import me.mathazak.myyelp.data.YelpBusiness
+import me.mathazak.myyelp.databinding.ItemBusinessBinding
 import me.mathazak.myyelp.utils.BusinessQuery
 import me.mathazak.myyelp.utils.ItemClickListener
 
@@ -39,7 +37,7 @@ class BusinessesAdapter :
         )
         return BusinessViewHolder(itemBinding).also { viewHolder ->
             itemBinding.favoriteSwitch.setOnCheckedChangeListener { _, checked ->
-                itemClickListener.onSwitchChange(checked , getItem(viewHolder.layoutPosition))
+                itemClickListener.onSwitchChange(checked, getItem(viewHolder.layoutPosition))
             }
         }
     }
@@ -68,10 +66,14 @@ class BusinessesAdapter :
             itemBinding.tvAddress.text = business.location.address
             itemBinding.tvCategory.text = business.categories.getOrNull(0)?.title ?: "No Category"
             itemBinding.tvDistance.text = business.displayDistance()
-            Glide.with(itemBinding.root.context).load(business.imageUrl)
-                .placeholder(ColorDrawable(itemBinding.root.context.getColor(R.color.md_theme_dark_error)))
-                .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(15)))
-                .into(itemView.findViewById(R.id.ivBusiness))
+            val imageUri = business.imageUrl.toUri()
+            itemBinding.ivBusiness.load(imageUri) {
+                placeholder(R.drawable.loading_animation)
+                transformations(
+                    RoundedCornersTransformation()
+                )
+                error(R.drawable.ic_broken_image)
+            }
             itemBinding.favoriteSwitch.isChecked = businessQuery.isFavorite(business)
         }
     }
