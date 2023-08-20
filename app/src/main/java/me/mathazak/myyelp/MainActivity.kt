@@ -3,7 +3,6 @@ package me.mathazak.myyelp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Switch
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
@@ -39,17 +39,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         preferences = getPreferences(MODE_PRIVATE)
 
-        val adapter = BusinessesAdapter()
-        adapter.setItemListener { checked, yelpBusiness ->
-            businessesViewModel.apply {
-                if (checked)
-                    insert(yelpBusiness)
-                else
-                    delete(yelpBusiness)
-            }
-        }
         var favoriteBusinesses = listOf<YelpBusiness>()
-        adapter.setBusinessQuery(favoriteBusinesses::contains)
+        val adapter = BusinessesAdapter(
+            businessesViewModel::onFavoriteBusinessClick,
+            favoriteBusinesses::contains
+        )
+
         binding.rvSearchedBusinesses.adapter = adapter
         binding.rvSearchedBusinesses.layoutManager = LinearLayoutManager(this)
 

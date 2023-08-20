@@ -3,26 +3,19 @@ package me.mathazak.myyelp.data
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import me.mathazak.myyelp.R
-import me.mathazak.myyelp.YelpApplication
-import me.mathazak.myyelp.utils.YelpApiService
+import me.mathazak.myyelp.api.YelpApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "BusinessesRepository"
 
-class BusinessesRepository(private val businessDao: BusinessDao) {
+class BusinessesRepository(
+    private val businessDao: BusinessDao,
+    private val yelpService: YelpApiService
+) {
 
-    private val yelpService =
-        Retrofit.Builder().baseUrl(YelpApplication.getRes()?.getString(R.string.base_url) ?: "")
-            .addConverterFactory(GsonConverterFactory.create()).build()
-            .create(YelpApiService::class.java)
-
-
-    val favoriteBusinesses = businessDao.loadAllBusinesses()
+    val favoriteBusinesses = businessDao.getFavoriteBusinesses()
     val searchedBusinesses = MutableLiveData<List<YelpBusiness>>()
 
     @WorkerThread
@@ -37,9 +30,8 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
 
     fun searchBusinesses(yelpSearchRequest: YelpSearchRequest) {
         yelpService.searchBusinesses(
-            getAuthorizationString(),
-            yelpSearchRequest.term,
-            yelpSearchRequest.location,
+            term = yelpSearchRequest.term,
+            location = yelpSearchRequest.location,
         ).enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(
                 call: Call<YelpSearchResult>,
@@ -57,14 +49,5 @@ class BusinessesRepository(private val businessDao: BusinessDao) {
                 Log.e(TAG, "Request to server failed: $t ")
             }
         })
-    }
-
-    private fun getAuthorizationString(): String {
-        return YelpApplication.getRes()?.let {
-            it.getString(
-                R.string.authorization_ph,
-                it.getString(R.string.api_key)
-            )
-        } ?: ""
     }
 }

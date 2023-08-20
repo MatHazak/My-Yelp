@@ -16,6 +16,6 @@ interface BusinessDao {
     @Delete
     suspend fun delete(business: YelpBusiness)
 
-    @Query("SELECT * FROM fav_businesses_table")
-    fun loadAllBusinesses(): Flow<List<YelpBusiness>>
+    @Query("SELECT * FROM favorite_businesses_table")
+    fun getFavoriteBusinesses(): Flow<List<YelpBusiness>>
 }

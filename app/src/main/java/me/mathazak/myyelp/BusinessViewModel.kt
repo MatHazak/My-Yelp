@@ -13,16 +13,23 @@ class BusinessViewModel(private val repository: BusinessesRepository) : ViewMode
     val favoriteBusinesses = repository.favoriteBusinesses.asLiveData()
     val searchedBusinesses = repository.searchedBusinesses
 
-    fun insert(business: YelpBusiness) = viewModelScope.launch {
+    private fun insert(business: YelpBusiness) = viewModelScope.launch {
         repository.insert(business)
     }
 
-    fun delete(business: YelpBusiness) = viewModelScope.launch {
+    private fun delete(business: YelpBusiness) = viewModelScope.launch {
         repository.delete(business)
     }
 
     fun fetchNewSearch(yelpSearchRequest: YelpSearchRequest) = viewModelScope.launch {
         repository.searchBusinesses(yelpSearchRequest)
+    }
+
+    fun onFavoriteBusinessClick(checked: Boolean, yelpBusiness: YelpBusiness) {
+        if (checked)
+            insert(yelpBusiness)
+        else
+            delete(yelpBusiness)
     }
 }
 

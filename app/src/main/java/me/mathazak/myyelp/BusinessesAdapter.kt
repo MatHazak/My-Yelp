@@ -10,14 +10,12 @@ import coil.load
 import coil.transform.RoundedCornersTransformation
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
-import me.mathazak.myyelp.utils.BusinessQuery
-import me.mathazak.myyelp.utils.ItemClickListener
 
-class BusinessesAdapter :
+class BusinessesAdapter(
+    private val itemClickListener: (Boolean, YelpBusiness) -> Unit,
+    private val businessQuery: (YelpBusiness) -> Boolean
+) :
     ListAdapter<YelpBusiness, BusinessesAdapter.BusinessViewHolder>(businessComparator) {
-
-    private lateinit var itemClickListener: ItemClickListener
-    private lateinit var businessQuery: BusinessQuery
 
     companion object {
         private val businessComparator = object : DiffUtil.ItemCallback<YelpBusiness>() {
@@ -25,7 +23,7 @@ class BusinessesAdapter :
                 oldItem === newItem
 
             override fun areContentsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
-                oldItem == newItem
+                oldItem.id == newItem.id
         }
     }
 
@@ -37,7 +35,7 @@ class BusinessesAdapter :
         )
         return BusinessViewHolder(itemBinding).also { viewHolder ->
             itemBinding.favoriteSwitch.setOnCheckedChangeListener { _, checked ->
-                itemClickListener.onSwitchChange(checked, getItem(viewHolder.layoutPosition))
+                itemClickListener(checked, getItem(viewHolder.layoutPosition))
             }
         }
     }
@@ -47,13 +45,6 @@ class BusinessesAdapter :
         holder.bind(business)
     }
 
-    fun setItemListener(listener: ItemClickListener) {
-        this.itemClickListener = listener
-    }
-
-    fun setBusinessQuery(query: BusinessQuery) {
-        this.businessQuery = query
-    }
 
     inner class BusinessViewHolder(private val itemBinding: ItemBusinessBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -74,7 +65,7 @@ class BusinessesAdapter :
                 )
                 error(R.drawable.ic_broken_image)
             }
-            itemBinding.favoriteSwitch.isChecked = businessQuery.isFavorite(business)
+            itemBinding.favoriteSwitch.isChecked = businessQuery(business)
         }
     }
 }

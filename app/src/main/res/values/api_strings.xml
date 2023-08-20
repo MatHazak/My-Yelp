@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="base_url">https://api.yelp.com/v3/</string>
-    <string name="api_key">_45em3yx8PMHlBvUty-dl0HXu7Zigfmgy3Sle2AfLgyySJ4-ppNY_1d8o7MU-G8CmRMgyLzOXURiLCadUoQGF2bT0ESrGTlIGkjdmS6aok1wbZSzDpAhD2uC2otCZHYx</string>
-    <string name="authorization_ph">Bearer %s</string>
-
     <string-array name="locations_array">
         <item>Amsterdam</item>
         <item>Atlanta</item>
