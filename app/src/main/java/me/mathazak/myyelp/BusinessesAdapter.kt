@@ -35,7 +35,7 @@ class BusinessesAdapter(
         )
         return BusinessViewHolder(itemBinding).also { viewHolder ->
             itemBinding.favoriteSwitch.setOnCheckedChangeListener { _, checked ->
-                itemClickListener(checked, getItem(viewHolder.layoutPosition))
+                 itemClickListener(checked, getItem(viewHolder.layoutPosition))
             }
         }
     }

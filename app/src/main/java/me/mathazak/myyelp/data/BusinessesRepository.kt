@@ -20,11 +20,13 @@ class BusinessesRepository(
 
     @WorkerThread
     suspend fun insert(business: YelpBusiness) {
+        Log.d("REPOSITORY INSERT", "looooooooooooooooop")
         businessDao.insert(business)
     }
 
     @WorkerThread
     suspend fun delete(business: YelpBusiness) {
+        Log.d("REPOSITORY DELETE", "looooooooooooooooop")
         businessDao.delete(business)
     }
 

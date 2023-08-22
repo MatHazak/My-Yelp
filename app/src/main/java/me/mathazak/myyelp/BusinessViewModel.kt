@@ -1,5 +1,6 @@
 package me.mathazak.myyelp
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -10,7 +11,7 @@ import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.data.YelpSearchRequest
 
 class BusinessViewModel(private val repository: BusinessesRepository) : ViewModel() {
-    val favoriteBusinesses = repository.favoriteBusinesses.asLiveData()
+    val favoriteBusinesses = repository.favoriteBusinesses
     val searchedBusinesses = repository.searchedBusinesses
 
     private fun insert(business: YelpBusiness) = viewModelScope.launch {
@@ -26,6 +27,7 @@ class BusinessViewModel(private val repository: BusinessesRepository) : ViewMode
     }
 
     fun onFavoriteBusinessClick(checked: Boolean, yelpBusiness: YelpBusiness) {
+        Log.d("VM ON FAV CLICK", yelpBusiness.name)
         if (checked)
             insert(yelpBusiness)
         else
