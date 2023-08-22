@@ -1,4 +1,4 @@
-package me.mathazak.myyelp
+package me.mathazak.myyelp.ui.views
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -20,9 +20,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import me.mathazak.myyelp.R
+import me.mathazak.myyelp.YelpApplication
 import me.mathazak.myyelp.data.YelpBusiness
-import me.mathazak.myyelp.data.YelpSearchRequest
 import me.mathazak.myyelp.databinding.FragmentAllBusinessesBinding
+import me.mathazak.myyelp.remote.YelpSearchRequest
+import me.mathazak.myyelp.ui.adapters.BusinessesAdapter
+import me.mathazak.myyelp.ui.viewmodels.BusinessViewModel
+import me.mathazak.myyelp.ui.viewmodels.BusinessViewModelFactory
 
 class AllBusinessesFragment : Fragment(), MenuProvider {
     private var _binding: FragmentAllBusinessesBinding? = null

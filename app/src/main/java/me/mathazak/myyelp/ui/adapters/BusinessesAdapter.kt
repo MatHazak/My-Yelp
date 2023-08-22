@@ -1,4 +1,4 @@
-package me.mathazak.myyelp
+package me.mathazak.myyelp.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import me.mathazak.myyelp.R
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
 

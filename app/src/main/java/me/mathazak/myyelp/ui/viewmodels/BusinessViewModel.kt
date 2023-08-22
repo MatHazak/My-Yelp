@@ -1,12 +1,12 @@
-package me.mathazak.myyelp
+package me.mathazak.myyelp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import me.mathazak.myyelp.remote.YelpSearchRequest
 import me.mathazak.myyelp.data.BusinessesRepository
 import me.mathazak.myyelp.data.YelpBusiness
-import me.mathazak.myyelp.data.YelpSearchRequest
 
 class BusinessViewModel(private val repository: BusinessesRepository) : ViewModel() {
     val favoriteBusinesses = repository.favoriteBusinesses

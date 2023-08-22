@@ -1,10 +1,11 @@
-package me.mathazak.myyelp
+package me.mathazak.myyelp.ui.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import me.mathazak.myyelp.R
 import me.mathazak.myyelp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -24,18 +25,5 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    override fun recreate() {
-        finish()
-        overridePendingTransition(
-            androidx.appcompat.R.anim.abc_fade_in,
-            androidx.appcompat.R.anim.abc_fade_out
-        )
-        startActivity(intent)
-        overridePendingTransition(
-            androidx.appcompat.R.anim.abc_fade_in,
-            androidx.appcompat.R.anim.abc_fade_out
-        )
     }
 }

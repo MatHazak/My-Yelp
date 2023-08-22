@@ -1,14 +1,15 @@
-package me.mathazak.myyelp.api
+package me.mathazak.myyelp.remote
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import me.mathazak.myyelp.data.YelpSearchResult
+import me.mathazak.myyelp.data.YelpBusiness
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
+import java.io.Serializable
 
 interface YelpApiService {
     @GET("businesses/search")
@@ -39,3 +40,13 @@ interface YelpApiService {
         fun create(): YelpApiService = retrofit.create(YelpApiService::class.java)
     }
 }
+
+data class YelpSearchRequest(
+    val term: String,
+    val location: String,
+) : Serializable
+
+data class YelpSearchResult(
+    val total: Int,
+    val businesses: List<YelpBusiness>
+)

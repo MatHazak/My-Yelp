@@ -1,7 +1,7 @@
 package me.mathazak.myyelp
 
 import android.app.Application
-import me.mathazak.myyelp.api.YelpApiService
+import me.mathazak.myyelp.remote.YelpApiService
 import me.mathazak.myyelp.data.BusinessRoomDatabase
 import me.mathazak.myyelp.data.BusinessesRepository
 

@@ -1,4 +1,4 @@
-package me.mathazak.myyelp
+package me.mathazak.myyelp.ui.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import me.mathazak.myyelp.YelpApplication
+import me.mathazak.myyelp.ui.adapters.BusinessesAdapter
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.databinding.FragmentFavoriteBusinessesBinding
+import me.mathazak.myyelp.ui.viewmodels.BusinessViewModel
+import me.mathazak.myyelp.ui.viewmodels.BusinessViewModelFactory
 
 class FavoriteBusinessesFragment : Fragment() {
 

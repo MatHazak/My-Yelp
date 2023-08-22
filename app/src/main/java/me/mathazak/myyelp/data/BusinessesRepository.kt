@@ -3,7 +3,9 @@ package me.mathazak.myyelp.data
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import me.mathazak.myyelp.api.YelpApiService
+import me.mathazak.myyelp.remote.YelpApiService
+import me.mathazak.myyelp.remote.YelpSearchRequest
+import me.mathazak.myyelp.remote.YelpSearchResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,13 +22,11 @@ class BusinessesRepository(
 
     @WorkerThread
     suspend fun insert(business: YelpBusiness) {
-        Log.d("REPOSITORY INSERT", "looooooooooooooooop")
         businessDao.insert(business)
     }
 
     @WorkerThread
     suspend fun delete(business: YelpBusiness) {
-        Log.d("REPOSITORY DELETE", "looooooooooooooooop")
         businessDao.delete(business)
     }
 
