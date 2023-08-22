@@ -34,8 +34,9 @@ class BusinessesAdapter(
             false
         )
         return BusinessViewHolder(itemBinding).also { viewHolder ->
-            itemBinding.favoriteSwitch.setOnCheckedChangeListener { _, checked ->
-                 itemClickListener(checked, getItem(viewHolder.layoutPosition))
+            itemBinding.favoriteIcon.setOnCheckedChangeListener { _, checked ->
+                val position = viewHolder.layoutPosition
+                 itemClickListener(checked, getItem(position))
             }
         }
     }
@@ -65,7 +66,7 @@ class BusinessesAdapter(
                 )
                 error(R.drawable.ic_broken_image)
             }
-            itemBinding.favoriteSwitch.isChecked = businessQuery(business)
+            itemBinding.favoriteIcon.isChecked = businessQuery(business)
         }
     }
 }

@@ -52,7 +52,7 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
 
         val favoriteBusinesses = mutableListOf<YelpBusiness>()
         val adapter = BusinessesAdapter(
-            viewModel::onFavoriteBusinessClick,
+            ::onFavoriteIconClick,
             favoriteBusinesses::contains
         )
 
@@ -108,6 +108,13 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
 
             else -> false
         }
+    }
+
+    private fun onFavoriteIconClick(checked: Boolean, yelpBusiness: YelpBusiness) {
+        if (checked)
+            viewModel.insert(yelpBusiness)
+        else
+            viewModel.delete(yelpBusiness)
     }
 
     private fun searchBusinesses() {

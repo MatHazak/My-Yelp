@@ -1,7 +1,6 @@
 package me.mathazak.myyelp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,18 +35,35 @@ class FavoriteBusinessesFragment : Fragment() {
 
         val favoriteBusinesses = mutableListOf<YelpBusiness>()
         val adapter = BusinessesAdapter(
-            viewModel::onFavoriteBusinessClick,
+            ::onFavoriteIconClick,
             favoriteBusinesses::contains
         )
-        viewModel.favoriteBusinesses.asLiveData().observe(viewLifecycleOwner) {
-            Log.d("FAV BUSI FRAGMENT", "looooooooooooooooop")
-            favoriteBusinesses.clear()
-            favoriteBusinesses.addAll(it)
-            adapter.submitList(it)
-        }
+
+        viewModel.favoriteBusinesses.asLiveData()
+            .observe(viewLifecycleOwner) { liveFavoriteBusinesses ->
+                if (favoriteBusinesses.isEmpty()) {
+                    favoriteBusinesses.addAll(liveFavoriteBusinesses)
+                    adapter.submitList(favoriteBusinesses)
+                } else {
+                    for (i in favoriteBusinesses.indices) {
+                        if (!liveFavoriteBusinesses.contains(favoriteBusinesses[i])) {
+                            favoriteBusinesses.removeAt(i)
+                            adapter.notifyItemRemoved(i)
+                            break
+                        }
+                    }
+                }
+            }
 
         binding.rvFavoriteBusinesses.adapter = adapter
         binding.rvFavoriteBusinesses.layoutManager = LinearLayoutManager(requireContext())
+    }
 
+    private fun onFavoriteIconClick(checked: Boolean, yelpBusiness: YelpBusiness) {
+        if (checked)
+            viewModel.insert(yelpBusiness)
+        else {
+            viewModel.delete(yelpBusiness)
+        }
     }
 }
