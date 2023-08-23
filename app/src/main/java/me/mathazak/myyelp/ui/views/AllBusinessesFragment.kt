@@ -148,4 +148,9 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
             locationMenu?.setText(adapter.getItem(0), false)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
