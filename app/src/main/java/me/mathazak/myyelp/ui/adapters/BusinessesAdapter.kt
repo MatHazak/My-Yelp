@@ -21,7 +21,7 @@ class BusinessesAdapter(
     companion object {
         private val businessComparator = object : DiffUtil.ItemCallback<YelpBusiness>() {
             override fun areItemsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
-                oldItem === newItem
+                oldItem == newItem
 
             override fun areContentsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
                 oldItem.id == newItem.id
