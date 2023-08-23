@@ -1,5 +1,6 @@
 package me.mathazak.myyelp.ui.views
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Switch
@@ -24,7 +26,6 @@ import me.mathazak.myyelp.R
 import me.mathazak.myyelp.YelpApplication
 import me.mathazak.myyelp.data.YelpBusiness
 import me.mathazak.myyelp.databinding.FragmentAllBusinessesBinding
-import me.mathazak.myyelp.remote.YelpSearchRequest
 import me.mathazak.myyelp.ui.adapters.BusinessesAdapter
 import me.mathazak.myyelp.ui.viewmodels.BusinessViewModel
 import me.mathazak.myyelp.ui.viewmodels.BusinessViewModelFactory
@@ -78,7 +79,7 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
             searchBusinesses()
         }
 
-        searchBusinesses()
+        viewModel.fetchNewSearch()
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -123,10 +124,14 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
     }
 
     private fun searchBusinesses() {
-        val term = binding.etTerm.editText?.text.toString()
-        val location = binding.locationMenu.editText?.text.toString()
-        val yelpSearchRequest = YelpSearchRequest(term, location)
-        viewModel.fetchNewSearch(yelpSearchRequest)
+        viewModel.apply {
+            searchTerm = binding.etTerm.editText?.text.toString()
+            searchLocation = binding.locationMenu.editText?.text.toString()
+            fetchNewSearch()
+        }
+        val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as
+                InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 
     private fun updateUi() {
