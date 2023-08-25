@@ -11,11 +11,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.data.BusinessesRepository
+import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_LOCATION
+import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_TERM
 
 class BusinessViewModel(private val repository: BusinessesRepository) : ViewModel() {
 
-    var searchTerm = ""
-    var searchLocation = "Amsterdam"
+    var searchTerm = DEFAULT_SEARCH_TERM
+    var searchLocation = DEFAULT_SEARCH_LOCATION
 
     val favoriteBusinesses = repository.favoriteBusinesses.asLiveData()
     val favoriteBusinessesId: LiveData<List<String>>

@@ -15,10 +15,10 @@ import me.mathazak.myyelp.databinding.ItemBusinessBinding
 class BusinessesAdapter(
     private val itemClickListener: (Boolean, Business) -> Unit,
 ) :
-    ListAdapter<Business, BusinessesAdapter.BusinessViewHolder>(localBusinessComparator) {
+    ListAdapter<Business, BusinessesAdapter.BusinessViewHolder>(BusinessComparator) {
 
     companion object {
-        private val localBusinessComparator = object : DiffUtil.ItemCallback<Business>() {
+        private val BusinessComparator = object : DiffUtil.ItemCallback<Business>() {
             override fun areItemsTheSame(oldItem: Business, newItem: Business) =
                 oldItem.id == newItem.id
 
