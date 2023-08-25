@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.Flow
 interface BusinessDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(business: YelpBusiness)
+    suspend fun insert(localBusiness: LocalBusiness)
 
     @Delete
-    suspend fun delete(business: YelpBusiness)
+    suspend fun delete(localBusiness: LocalBusiness)
 
     @Query("SELECT * FROM favorite_businesses_table")
-    fun getFavoriteBusinesses(): Flow<List<YelpBusiness>>
+    fun getFavoriteBusinesses(): Flow<List<LocalBusiness>>
 }

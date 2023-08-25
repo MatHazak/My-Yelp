@@ -1,4 +1,4 @@
-package me.mathazak.myyelp.ui.views
+package me.mathazak.myyelp.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

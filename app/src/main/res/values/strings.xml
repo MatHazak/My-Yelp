@@ -6,4 +6,5 @@
     <string name="search_location_key">searchLocation</string>
     <string name="search_categories_key">searchCategories</string>
     <string name="favorite_businesses">Favorite Businesses</string>
+    <string name="distance_in_km">%d Km</string>
 </resources>

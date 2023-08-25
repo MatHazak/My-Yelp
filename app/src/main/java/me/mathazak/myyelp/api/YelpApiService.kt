@@ -1,29 +1,25 @@
-package me.mathazak.myyelp.remote
+package me.mathazak.myyelp.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import me.mathazak.myyelp.data.YelpBusiness
-import retrofit2.Call
+import me.mathazak.myyelp.utils.Constants.AUTHORIZATION
+import me.mathazak.myyelp.utils.Constants.BASE_URL
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
-import java.io.Serializable
 
 interface YelpApiService {
     @GET("businesses/search")
-    fun searchBusinesses(
+    suspend fun searchBusinesses(
         @Header("authorization") authorization: String = AUTHORIZATION,
         @Query("term") term: String,
         @Query("location") location: String,
-    ): Call<YelpSearchResult>
+    ): Response<YelpSearchResponse>
 
     companion object {
-
-        private const val BASE_URL = "https://api.yelp.com/v3/"
-        private const val AUTHORIZATION =
-            "Bearer _45em3yx8PMHlBvUty-dl0HXu7Zigfmgy3Sle2AfLgyySJ4-ppNY_1d8o7MU-G8CmRMgyLzOXURiLCadUoQGF2bT0ESrGTlIGkjdmS6aok1wbZSzDpAhD2uC2otCZHYx"
 
         private val moshi by lazy {
             Moshi.Builder()
@@ -40,13 +36,3 @@ interface YelpApiService {
         fun create(): YelpApiService = retrofit.create(YelpApiService::class.java)
     }
 }
-
-data class YelpSearchRequest(
-    val term: String,
-    val location: String,
-) : Serializable
-
-data class YelpSearchResult(
-    val total: Int,
-    val businesses: List<YelpBusiness>
-)

@@ -1,4 +1,4 @@
-package me.mathazak.myyelp.ui.adapters
+package me.mathazak.myyelp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,22 +9,21 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import me.mathazak.myyelp.R
-import me.mathazak.myyelp.data.YelpBusiness
+import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.databinding.ItemBusinessBinding
 
 class BusinessesAdapter(
-    private val itemClickListener: (Boolean, YelpBusiness) -> Unit,
-    private val businessQuery: (YelpBusiness) -> Boolean
+    private val itemClickListener: (Boolean, Business) -> Unit,
 ) :
-    ListAdapter<YelpBusiness, BusinessesAdapter.BusinessViewHolder>(businessComparator) {
+    ListAdapter<Business, BusinessesAdapter.BusinessViewHolder>(localBusinessComparator) {
 
     companion object {
-        private val businessComparator = object : DiffUtil.ItemCallback<YelpBusiness>() {
-            override fun areItemsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
-                oldItem == newItem
-
-            override fun areContentsTheSame(oldItem: YelpBusiness, newItem: YelpBusiness) =
+        private val localBusinessComparator = object : DiffUtil.ItemCallback<Business>() {
+            override fun areItemsTheSame(oldItem: Business, newItem: Business) =
                 oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Business, newItem: Business) =
+                oldItem == newItem
         }
     }
 
@@ -37,7 +36,7 @@ class BusinessesAdapter(
         return BusinessViewHolder(itemBinding).also { viewHolder ->
             itemBinding.favoriteIcon.setOnCheckedChangeListener { _, checked ->
                 val position = viewHolder.layoutPosition
-                 itemClickListener(checked, getItem(position))
+                itemClickListener(checked, getItem(position))
             }
         }
     }
@@ -47,18 +46,20 @@ class BusinessesAdapter(
         holder.bind(business)
     }
 
-
     inner class BusinessViewHolder(private val itemBinding: ItemBusinessBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(business: YelpBusiness) {
+        fun bind(business: Business) {
             itemBinding.tvBusinessName.text = business.name
             itemBinding.rbBusiness.rating = business.rating.toFloat()
             itemBinding.tvPrice.text = business.price
             itemBinding.tvReviewNumbers.text =
                 itemBinding.root.context.getString(R.string.review_ph, business.numberOfReviews)
-            itemBinding.tvAddress.text = business.location.address
-            itemBinding.tvCategory.text = business.categories.getOrNull(0)?.title ?: "No Category"
-            itemBinding.tvDistance.text = business.displayDistance()
+            itemBinding.tvAddress.text = business.location
+            itemBinding.tvCategory.text = business.category
+            itemBinding.tvDistance.text =
+                itemBinding.root.context.getString(R.string.distance_in_km, business.distance)
+            itemBinding.favoriteIcon.isChecked = business.isFavorite
+
             val imageUri = business.imageUrl.toUri()
             itemBinding.ivBusiness.load(imageUri) {
                 placeholder(R.drawable.loading_animation)
@@ -67,7 +68,6 @@ class BusinessesAdapter(
                 )
                 error(R.drawable.ic_broken_image)
             }
-            itemBinding.favoriteIcon.isChecked = businessQuery(business)
         }
     }
 }

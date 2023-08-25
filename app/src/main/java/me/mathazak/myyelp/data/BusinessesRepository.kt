@@ -1,55 +1,42 @@
 package me.mathazak.myyelp.data
 
-import android.util.Log
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
-import me.mathazak.myyelp.remote.YelpApiService
-import me.mathazak.myyelp.remote.YelpSearchRequest
-import me.mathazak.myyelp.remote.YelpSearchResult
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
-private const val TAG = "BusinessesRepository"
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import me.mathazak.myyelp.api.YelpApiService
+import me.mathazak.myyelp.utils.toBusiness
+import me.mathazak.myyelp.utils.toLocalBusiness
 
 class BusinessesRepository(
     private val businessDao: BusinessDao,
     private val yelpService: YelpApiService
 ) {
 
-    val favoriteBusinesses = businessDao.getFavoriteBusinesses()
-    val searchedBusinesses = MutableLiveData<List<YelpBusiness>>()
+    private val _favoriteBusinesses = businessDao.getFavoriteBusinesses()
+    val favoriteBusinesses: Flow<List<Business>>
+        get() = _favoriteBusinesses.map { it.toBusiness() }
 
     @WorkerThread
-    suspend fun insert(business: YelpBusiness) {
-        businessDao.insert(business)
+    suspend fun insert(business: Business) {
+        businessDao.insert(business.toLocalBusiness())
     }
 
     @WorkerThread
-    suspend fun delete(business: YelpBusiness) {
-        businessDao.delete(business)
+    suspend fun delete(business: Business) {
+        businessDao.delete(business.toLocalBusiness())
     }
 
-    fun searchBusinesses(yelpSearchRequest: YelpSearchRequest) {
-        yelpService.searchBusinesses(
-            term = yelpSearchRequest.term,
-            location = yelpSearchRequest.location,
-        ).enqueue(object : Callback<YelpSearchResult> {
-            override fun onResponse(
-                call: Call<YelpSearchResult>,
-                response: Response<YelpSearchResult>
-            ) {
-                if (response.body() != null)
-                    searchedBusinesses.value = response.body()!!.businesses
-                else
-                    Log.e(
-                        TAG, "Didn't receive valid response. HTTP status code: ${response.code()}"
-                    )
+    @WorkerThread
+    suspend fun searchBusinesses(searchTerm: String, searchLocation: String): Flow<List<Business>> {
+        val response = yelpService.searchBusinesses(
+            term = searchTerm,
+            location = searchLocation,
+        )
+        return flow {
+            when (response.code()) {
+                200 -> emit(response.body()!!.businesses.toBusiness())
             }
-
-            override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
-                Log.e(TAG, "Request to server failed: $t ")
-            }
-        })
+        }
     }
 }
