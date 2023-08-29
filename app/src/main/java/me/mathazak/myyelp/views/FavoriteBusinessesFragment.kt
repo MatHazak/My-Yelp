@@ -36,26 +36,17 @@ class FavoriteBusinessesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val favoriteBusinesses = mutableListOf<Business>()
         val adapter = BusinessesAdapter(
             ::onFavoriteIconClick
         )
 
         viewModel.favoriteBusinesses
-            .observe(viewLifecycleOwner) { liveFavoriteBusinesses ->
-                adapter.submitList(liveFavoriteBusinesses)
-//                if (favoriteBusinesses.isEmpty()) {
-//                    favoriteBusinesses.addAll(liveFavoriteBusinesses)
-//                    adapter.submitList(favoriteBusinesses)
-//                } else {
-//                    for (i in favoriteBusinesses.indices) {
-//                        if (!liveFavoriteBusinesses.contains(favoriteBusinesses[i])) {
-//                            favoriteBusinesses.removeAt(i)
-//                            adapter.notifyItemRemoved(i)
-//                            break
-//                        }
-//                    }
-//                }
+            .observe(viewLifecycleOwner) { favoriteBusinesses ->
+                adapter.submitList(favoriteBusinesses)
+                if (favoriteBusinesses.isNullOrEmpty())
+                    binding.ivNoFavorite.visibility = View.VISIBLE
+                else
+                    binding.ivNoFavorite.visibility = View.GONE
             }
 
         binding.rvFavoriteBusinesses.adapter = adapter

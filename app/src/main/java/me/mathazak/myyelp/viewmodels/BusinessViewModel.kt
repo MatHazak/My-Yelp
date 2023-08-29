@@ -13,6 +13,7 @@ import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.data.BusinessesRepository
 import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_LOCATION
 import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_TERM
+import me.mathazak.myyelp.utils.DataStatus
 
 class BusinessViewModel(private val repository: BusinessesRepository) : ViewModel() {
 
@@ -24,9 +25,9 @@ class BusinessViewModel(private val repository: BusinessesRepository) : ViewMode
         get() = favoriteBusinesses.map { favoriteBusinesses ->
             favoriteBusinesses.map { it.id }
         }
-    private val _searchedBusinesses = MutableLiveData<List<Business>>()
+    private val _searchedBusinesses = MutableLiveData<DataStatus<List<Business>>>()
 
-    val searchedBusinesses: LiveData<List<Business>>
+    val searchedBusinesses: LiveData<DataStatus<List<Business>>>
         get() = _searchedBusinesses
 
     fun insert(business: Business) {

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import me.mathazak.myyelp.api.YelpApiService
+import me.mathazak.myyelp.utils.DataStatus
 import me.mathazak.myyelp.utils.toBusiness
 import me.mathazak.myyelp.utils.toLocalBusiness
 
@@ -28,15 +29,20 @@ class BusinessesRepository(
     }
 
     @WorkerThread
-    suspend fun searchBusinesses(searchTerm: String, searchLocation: String): Flow<List<Business>> {
-        val response = yelpService.searchBusinesses(
-            term = searchTerm,
-            location = searchLocation,
-        )
-        return flow {
-            when (response.code()) {
-                200 -> emit(response.body()!!.businesses.toBusiness())
-            }
+    suspend fun searchBusinesses(
+        searchTerm: String,
+        searchLocation: String
+    ) = flow {
+        try {
+            val response = yelpService.searchBusinesses(searchTerm, searchLocation)
+            if (response.isSuccessful) {
+                val data = response.body()!!.businesses.toBusiness()
+                emit(DataStatus.success(data))
+            } else
+                throw RuntimeException()
+
+        } catch (exception: Exception) {
+            emit(DataStatus.error())
         }
     }
 }

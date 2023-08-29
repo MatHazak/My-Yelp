@@ -26,6 +26,7 @@ import me.mathazak.myyelp.YelpApplication
 import me.mathazak.myyelp.adapters.BusinessesAdapter
 import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.databinding.FragmentAllBusinessesBinding
+import me.mathazak.myyelp.utils.DataStatus
 import me.mathazak.myyelp.viewmodels.BusinessViewModel
 import me.mathazak.myyelp.viewmodels.BusinessViewModelFactory
 
@@ -38,9 +39,9 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
             (activity?.application as YelpApplication).repository
         )
     }
-
     private lateinit var themeSwitch: Switch
     private lateinit var preferences: SharedPreferences
+    private val adapter = BusinessesAdapter(::onFavoriteIconClick)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,15 +64,14 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
 
         viewModel.fetchNewSearch()
 
-        val adapter = BusinessesAdapter(
-            ::onFavoriteIconClick,
-        )
         viewModel.searchedBusinesses
-            .observe(viewLifecycleOwner) {
-                it.forEach { business ->
-                    business.isFavorite = favoriteBusinessesId.contains(business.id)
+            .observe(viewLifecycleOwner) { dataStatus ->
+                when (dataStatus.status) {
+                    DataStatus.Status.SUCCESS ->
+                        setAdapterData(dataStatus.data!!, favoriteBusinessesId)
+
+                    DataStatus.Status.ERROR -> showErrorIcon()
                 }
-                adapter.submitList(it)
             }
 
         binding.rvSearchedBusinesses.adapter = adapter
@@ -99,10 +99,7 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
         return when (menuItem.itemId) {
             R.id.newSearch -> {
                 binding.clSearch.apply {
-                    visibility = if (visibility == View.GONE)
-                        View.VISIBLE
-                    else
-                        View.GONE
+                    visibility = if (visibility == View.GONE) View.VISIBLE else View.GONE
                 }
                 true
             }
@@ -118,6 +115,16 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
         }
     }
 
+    private fun setAdapterData(data: List<Business>, favoriteBusinessesId: List<String>) {
+        binding.ivConnectionError.visibility = View.GONE
+        binding.ivNoSearchResult.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
+
+        data.forEach { business ->
+            business.isFavorite = favoriteBusinessesId.contains(business.id)
+        }
+        adapter.submitList(data)
+    }
+
     private fun onFavoriteIconClick(checked: Boolean, business: Business) {
         if (checked)
             viewModel.insert(business)
@@ -131,9 +138,18 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
             searchLocation = binding.locationMenu.editText?.text.toString()
             fetchNewSearch()
         }
+        closeSoftKeyboard()
+    }
+
+    private fun closeSoftKeyboard() {
         val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as
                 InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(binding.searchButton.windowToken, 0)
+    }
+
+    private fun showErrorIcon() {
+        adapter.submitList(listOf())
+        binding.ivConnectionError.visibility = View.VISIBLE
     }
 
     private fun updateUi() {
