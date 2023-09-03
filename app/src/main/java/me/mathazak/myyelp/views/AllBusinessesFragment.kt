@@ -1,6 +1,5 @@
 package me.mathazak.myyelp.views
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -19,6 +15,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.mathazak.myyelp.R
@@ -31,6 +28,7 @@ import me.mathazak.myyelp.viewmodels.BusinessViewModel
 import me.mathazak.myyelp.viewmodels.BusinessViewModelFactory
 
 class AllBusinessesFragment : Fragment(), MenuProvider {
+
     private var _binding: FragmentAllBusinessesBinding? = null
     private val binding get() = _binding!!
 
@@ -70,18 +68,14 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
                     DataStatus.Status.SUCCESS ->
                         setAdapterData(dataStatus.data!!, favoriteBusinessesId)
 
-                    DataStatus.Status.ERROR -> showErrorIcon()
+                    DataStatus.Status.ERROR -> showConnectionErrorIcon()
                 }
             }
 
         binding.rvSearchedBusinesses.adapter = adapter
         binding.rvSearchedBusinesses.layoutManager = LinearLayoutManager(requireContext())
 
-        propSearchBar()
-        binding.searchButton.setOnClickListener {
-            binding.clSearch.visibility = View.GONE
-            searchBusinesses()
-        }
+        binding.fabNewSearch.setOnClickListener { showSearchDialog() }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -97,12 +91,6 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
-            R.id.newSearch -> {
-                binding.clSearch.apply {
-                    visibility = if (visibility == View.GONE) View.VISIBLE else View.GONE
-                }
-                true
-            }
 
             R.id.favorites -> {
                 val action =
@@ -113,6 +101,12 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
 
             else -> false
         }
+    }
+
+    private fun showSearchDialog() {
+        val action =
+            AllBusinessesFragmentDirections.actionAllBusinessesFragmentToNewSearchDialog()
+        findNavController().navigate(action)
     }
 
     private fun setAdapterData(data: List<Business>, favoriteBusinessesId: List<String>) {
@@ -132,22 +126,7 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
             viewModel.delete(business)
     }
 
-    private fun searchBusinesses() {
-        viewModel.apply {
-            searchTerm = binding.etTerm.editText?.text.toString()
-            searchLocation = binding.locationMenu.editText?.text.toString()
-            fetchNewSearch()
-        }
-        closeSoftKeyboard()
-    }
-
-    private fun closeSoftKeyboard() {
-        val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as
-                InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.searchButton.windowToken, 0)
-    }
-
-    private fun showErrorIcon() {
+    private fun showConnectionErrorIcon() {
         adapter.submitList(listOf())
         binding.ivConnectionError.visibility = View.VISIBLE
     }
@@ -156,19 +135,6 @@ class AllBusinessesFragment : Fragment(), MenuProvider {
         themeSwitch.apply {
             isChecked = preferences.getBoolean(getString(R.string.theme_switch_key), false)
             AppCompatDelegate.setDefaultNightMode(if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-        }
-    }
-
-    private fun propSearchBar() {
-        val locationMenu = binding.locationMenu.editText as? AutoCompleteTextView
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.locations_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            locationMenu?.setAdapter(adapter)
-            locationMenu?.setText(adapter.getItem(0), false)
         }
     }
 

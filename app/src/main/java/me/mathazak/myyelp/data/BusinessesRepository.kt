@@ -31,10 +31,9 @@ class BusinessesRepository(
     @WorkerThread
     suspend fun searchBusinesses(
         searchTerm: String,
-        searchLocation: String
     ) = flow {
         try {
-            val response = yelpService.searchBusinesses(searchTerm, searchLocation)
+            val response = yelpService.searchBusinesses(searchTerm)
             if (response.isSuccessful) {
                 val data = response.body()!!.businesses.toBusiness()
                 emit(DataStatus.success(data))

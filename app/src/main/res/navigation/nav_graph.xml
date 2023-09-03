@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_allBusinessesFragment_to_favoriteBusinessesFragment"
             app:destination="@id/favoriteBusinessesFragment" />
+        <action
+            android:id="@+id/action_allBusinessesFragment_to_newSearchDialog"
+            app:destination="@id/newSearchDialog" />
     </fragment>
     <fragment
         android:id="@+id/favoriteBusinessesFragment"
         android:name="me.mathazak.myyelp.views.FavoriteBusinessesFragment"
         android:label="@string/favorite_businesses"
         tools:layout="@layout/fragment_favorite_businesses" />
+    <dialog
+        android:id="@+id/newSearchDialog"
+        android:name="me.mathazak.myyelp.views.NewSearchDialog"
+        android:label="dialog_new_search"
+        tools:layout="@layout/dialog_new_search" />
 </navigation>

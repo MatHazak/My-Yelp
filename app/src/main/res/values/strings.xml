@@ -2,9 +2,14 @@
     <string name="app_name">My Yelp</string>
     <string name="search_activity_key">searchKey</string>
     <string name="theme_switch_key">themeSwitch</string>
-    <string name="search_term_key">searchTerm</string>
-    <string name="search_location_key">searchLocation</string>
-    <string name="search_categories_key">searchCategories</string>
     <string name="favorite_businesses">Favorite Businesses</string>
     <string name="distance_in_km">%d Km</string>
+    <string name="connection_error">connection error</string>
+    <string name="no_search_result">no search result</string>
+    <string name="review_ph">%d Reviews</string>
+    <string name="new_search">New Search</string>
+    <string name="image_of_business">Image Of Business</string>
+    <string name="term">Term</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
 </resources>

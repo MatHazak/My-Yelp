@@ -11,14 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.data.BusinessesRepository
-import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_LOCATION
 import me.mathazak.myyelp.utils.Constants.DEFAULT_SEARCH_TERM
 import me.mathazak.myyelp.utils.DataStatus
 
 class BusinessViewModel(private val repository: BusinessesRepository) : ViewModel() {
 
     var searchTerm = DEFAULT_SEARCH_TERM
-    var searchLocation = DEFAULT_SEARCH_LOCATION
 
     val favoriteBusinesses = repository.favoriteBusinesses.asLiveData()
     val favoriteBusinessesId: LiveData<List<String>>
@@ -43,7 +41,7 @@ class BusinessViewModel(private val repository: BusinessesRepository) : ViewMode
     }
 
     fun fetchNewSearch() = viewModelScope.launch {
-        repository.searchBusinesses(searchTerm, searchLocation).collect {
+        repository.searchBusinesses(searchTerm).collect {
             _searchedBusinesses.value = it
         }
     }
