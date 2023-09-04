@@ -32,7 +32,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--        todo : change button style-->
     <Button
         android:text="@string/cancel"
         android:layout_width="wrap_content"

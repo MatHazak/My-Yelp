@@ -1,15 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- "Mark Favorite", should appear as action button if possible -->
     <item
-            android:title=""
-            android:id="@+id/favorites"
-            android:icon="@drawable/ic_heart_multiple_outline"
-            app:showAsAction="ifRoom" />
+        android:id="@+id/favorites"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/favorites_outline_icon"
+        android:title="@string/favorite_businesses" />
     <item
-            android:id="@+id/themeSwitchBar"
-            app:showAsAction="ifRoom"
-            app:actionLayout="@layout/theme_switch"
-            android:title="" />
+        android:id="@+id/themeSwitchBar"
+        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/switch_theme"
+        android:title="@string/dark_mode" />
 </menu>

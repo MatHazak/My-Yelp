@@ -6,14 +6,13 @@
 
     <Switch
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:thumb="@drawable/thumb_list"
-            android:paddingEnd="15dp"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb_theme_switch"
+            android:paddingEnd="10dp"
             android:paddingStart="5dp"
             android:id="@+id/themeSwitch"
             app:showText="false"
-            android:track="@drawable/track_background"
-            android:checked="false"
+            android:track="@drawable/track_theme_switch"
             android:layout_centerInParent="true"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 </RelativeLayout>
