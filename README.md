@@ -1,30 +1,27 @@
 # My Yelp
 
-A simple android app that uses [Yelp](https://www.yelp.com/) API.
+A basic Android app to explore Android fundamentals.
 
 ## Description
 
-*My Yelp* consists of a main view in which a list of searched businesses are displayed and users can mark favorite ones to save.
+*My Yelp* implements single-activity architecture and consists of a main fragment that displays a list of businesses and allows the user to mark and save favorite businesses.
 
-Favorite businesses will be displayed in another view and users can unmark them in both views.
+Favorite businesses are stored in a local database and are accessible in another view. The user can unmark favorite businesses in both views.
 
-The app bar contains a dark-mode switch to change the app theme.
+The app bar includes a dark mode switch and an icon button for the Favorite Businesses view. The search box appears as a dialog triggered by a FAB.
 
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/7ad1d2c1-d332-4a11-abf5-0e43ccb154ff" alt="feed example" width="250">
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/7e017c21-ad1d-41d1-b990-26132eca349b" alt="feed example" width="250">
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/0d820e81-19a4-4b38-a185-3aa405e45aea" alt="feed example" width="250">
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/9899d2df-0b09-4509-b334-58c9ecb8fcc3" alt="feed example" width="250">
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/3249ac5e-112e-4254-9033-861a848c38d6" alt="feed example" width="250">
-<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/d8bc4ecd-d3bd-4349-981b-d99cd363a0c9" alt="feed example" width="250">
+<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/9bc2c2c6-1202-4047-8457-54c566e8d68d" alt="feed example" width="290">
+<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/346eeaa0-895e-4333-ad2a-f9c4e90ec61c" alt="feed example" width="290">
+<br>
+<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/28331607-92ea-447e-b453-9a347ba761f0" alt="feed example" width="290">
+<img src="https://github.com/MatHazak/My-Yelp/assets/97834376/230471ad-44bc-4e82-ba35-2c169b725344" alt="feed example" width="290">
 
+## Properties
 
-## Characteristics
-
-* [Retrofit](https://github.com/square/retrofit): Handle API calls
-* [Glide](https://github.com/bumptech/glide): Fetch remote images into the app
-* [Room](https://developer.android.com/reference/androidx/room/package-summary.html): Store and retrieve favorite businesses
-* MVVM architecture
-
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+* [Yelp API](https://docs.developer.yelp.com/)
+* [Retrofit](https://github.com/square/retrofit)
+* [Moshi](https://github.com/square/moshi)
+* [Coil](https://github.com/coil-kt/coil)
+* [Jetpack Room](https://developer.android.com/jetpack/androidx/releases/room)
+* [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
+* MVVM Architecture
