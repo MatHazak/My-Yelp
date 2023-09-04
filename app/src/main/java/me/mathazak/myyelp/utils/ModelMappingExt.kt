@@ -13,7 +13,7 @@ fun NetworkBusiness.toBusiness() = Business(
     distance = (distanceInMeter % 1000).toInt(),
     imageUrl = imageUrl,
     category = categories.getOrNull(0)?.title ?: "No Category",
-    location = location.address,
+    location = "${location.city}, ${location.state}",
     isFavorite = false
 )
 

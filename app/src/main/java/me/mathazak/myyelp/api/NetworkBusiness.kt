@@ -19,5 +19,6 @@ data class YelpBusinessCategory(
 )
 
 data class YelpBusinessLocation(
-    @Json(name = "address1") val address: String,
+    val city: String,
+    val state: String,
 )
