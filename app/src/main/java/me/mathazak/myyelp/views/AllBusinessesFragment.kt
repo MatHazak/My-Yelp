@@ -15,28 +15,24 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import me.mathazak.myyelp.R
-import me.mathazak.myyelp.YelpApplication
 import me.mathazak.myyelp.adapters.BusinessesAdapter
 import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.databinding.FragmentAllBusinessesBinding
 import me.mathazak.myyelp.utils.DataStatus
 import me.mathazak.myyelp.viewmodels.BusinessViewModel
-import me.mathazak.myyelp.viewmodels.BusinessViewModelFactory
 
+@AndroidEntryPoint
 class AllBusinessesFragment : Fragment(), MenuProvider {
 
     private var _binding: FragmentAllBusinessesBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: BusinessViewModel by activityViewModels {
-        BusinessViewModelFactory(
-            (activity?.application as YelpApplication).repository
-        )
-    }
+    private val viewModel: BusinessViewModel by activityViewModels()
+
     private lateinit var themeSwitch: Switch
     private lateinit var preferences: SharedPreferences
     private val adapter = BusinessesAdapter(::onFavoriteIconClick)

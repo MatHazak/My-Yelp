@@ -8,8 +8,9 @@ import me.mathazak.myyelp.api.YelpApiService
 import me.mathazak.myyelp.utils.DataStatus
 import me.mathazak.myyelp.utils.toBusiness
 import me.mathazak.myyelp.utils.toLocalBusiness
+import javax.inject.Inject
 
-class BusinessesRepository(
+class BusinessesRepository @Inject constructor(
     private val businessDao: BusinessDao,
     private val yelpService: YelpApiService
 ) {

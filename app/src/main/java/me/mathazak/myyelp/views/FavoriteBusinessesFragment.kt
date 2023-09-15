@@ -7,23 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import me.mathazak.myyelp.YelpApplication
+import dagger.hilt.android.AndroidEntryPoint
 import me.mathazak.myyelp.adapters.BusinessesAdapter
 import me.mathazak.myyelp.data.Business
 import me.mathazak.myyelp.databinding.FragmentFavoriteBusinessesBinding
 import me.mathazak.myyelp.viewmodels.BusinessViewModel
-import me.mathazak.myyelp.viewmodels.BusinessViewModelFactory
 
+@AndroidEntryPoint
 class FavoriteBusinessesFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBusinessesBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: BusinessViewModel by activityViewModels {
-        BusinessViewModelFactory(
-            (activity?.application as YelpApplication).repository
-        )
-    }
+    private val viewModel: BusinessViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

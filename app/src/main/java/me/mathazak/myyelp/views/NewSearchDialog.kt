@@ -11,23 +11,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.google.android.material.transition.MaterialContainerTransform
-import me.mathazak.myyelp.R
-import me.mathazak.myyelp.YelpApplication
+import dagger.hilt.android.AndroidEntryPoint
 import me.mathazak.myyelp.databinding.DialogNewSearchBinding
 import me.mathazak.myyelp.viewmodels.BusinessViewModel
-import me.mathazak.myyelp.viewmodels.BusinessViewModelFactory
 
+@AndroidEntryPoint
 class NewSearchDialog : DialogFragment() {
 
     private var _binding: DialogNewSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: BusinessViewModel by activityViewModels {
-        BusinessViewModelFactory(
-            (activity?.application as YelpApplication).repository
-        )
-    }
+    private val viewModel: BusinessViewModel by activityViewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
