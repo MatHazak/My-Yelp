@@ -6,7 +6,7 @@ A basic Android app to explore Android fundamentals.
 
 *My Yelp* implements single-activity architecture and consists of a main fragment that displays a list of businesses and allows the user to mark and save favorite businesses.
 
-Favorite businesses are stored in a local database and are accessible in another view. The user can unmark favorite businesses in both views.
+Favorite businesses are stored in a local database and are accessible in another view. The user can remove favorite businesses in both views.
 
 The app bar includes a dark mode switch and an icon button for the Favorite Businesses view. The search box appears as a dialog triggered by a FAB.
 
@@ -22,6 +22,7 @@ The app bar includes a dark mode switch and an icon button for the Favorite Busi
 * [Retrofit](https://github.com/square/retrofit)
 * [Moshi](https://github.com/square/moshi)
 * [Coil](https://github.com/coil-kt/coil)
+* [Dagger Hilt](https://github.com/google/dagger)
 * [Jetpack Room](https://developer.android.com/jetpack/androidx/releases/room)
 * [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
 * MVVM Architecture
